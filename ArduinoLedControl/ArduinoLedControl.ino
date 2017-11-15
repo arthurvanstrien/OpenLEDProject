@@ -16,9 +16,10 @@ void setup()
   }
 
   state = true;
-  colorRed = 0;
-  colorGreen = 0;
-  colorBlue = 0;
+  colorRed = 255;
+  colorGreen = 255;
+  colorBlue = 255;
+  updateColors();
   
   Serial.println("LED Controller Started.");
 }

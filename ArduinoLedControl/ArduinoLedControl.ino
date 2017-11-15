@@ -1,39 +1,85 @@
 bool state;
+const int ledRed = 8;
+const int ledGreen = 7;
+const int ledBlue = 6;
+int colorRed;
+int colorGreen;
+int colorBlue;
 
-void setup() {
+void setup() 
+{
   // Open serial communications and wait for port to open:
   Serial.begin(4800);
-  while (!Serial) {
+  while (!Serial) 
+  {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
   state = true;
-
+  colorRed = 0;
+  colorGreen = 0;
+  colorBlue = 0;
+  
   Serial.println("LED Controller Started.");
 }
 
-void loop() { // run over and over
+void loop() 
+{ // run over and over
 
-  if(Serial.available()) {
-    char message = Serial.read();
+  if(Serial.available()) 
+  {
+    String message;
+    message = Serial.readString();
+    
+    if(message == "switch") 
+    {
+      waitForSerial();
+      String value = Serial.readString();
+      
+      if(value == "on")
+      {
+        updateColors();
+      }
+      else
+      {
+        analogWrite(ledRed, 0);
+        analogWrite(ledGreen, 0);
+        analogWrite(ledBlue, 0);
+      }
+    } 
+    else if(message == "color") 
+    {
+      waitForSerial();
+      String red = Serial.readString();
+      waitForSerial();
+      String green = Serial.readString();
+      waitForSerial();
+      String blue = Serial.readString();
 
-    Serial.println(message);
+      colorRed = red.toInt();
+      colorGreen = green.toInt();
+      colorBlue = blue.toInt();
 
-    if(message == '0') {
-      state = false;
-      Serial.println("false");
-    } else if (message == '1') {
-      state = true;
-      Serial.println("true");
+      updateColors();
     }
+    else
+    {
+      Serial.println("Else");
+    }
+  }
+}
 
-    message = '\0';
+void waitForSerial()
+{
+  while(Serial.available() == 0)
+  {
   }
-  
-  if(state == false) {
-    digitalWrite(LED_BUILTIN, LOW);
-  } else {
-    digitalWrite(LED_BUILTIN, HIGH);
-  }
+}
+
+void updateColors()
+{   
+  analogWrite(ledRed, colorRed);
+  analogWrite(ledGreen, colorGreen);
+  analogWrite(ledBlue, colorBlue);
 }
 

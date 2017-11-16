@@ -1,10 +1,12 @@
 bool state;
-const int ledRed = 8;
-const int ledGreen = 7;
-const int ledBlue = 6;
 int colorRed;
 int colorGreen;
 int colorBlue;
+
+int ledArray[][3] = 
+{
+ {8,7,6} 
+};
 
 void setup() 
 {
@@ -43,9 +45,7 @@ void loop()
       }
       else
       {
-        analogWrite(ledRed, 0);
-        analogWrite(ledGreen, 0);
-        analogWrite(ledBlue, 0);
+        updateColors(0,0,0);
       }
     } 
     else if(message == "color") 
@@ -68,10 +68,13 @@ void waitForSerial()
 }
 
 void updateColors(int cr, int cg, int cb)
-{   
-  analogWrite(ledRed, cr);
-  analogWrite(ledGreen, cg);
-  analogWrite(ledBlue, cb);
+{ 
+  for(int i = 0; i < (sizeof(ledArray) / sizeof(ledArray[0])); i++)
+  {  
+    analogWrite(ledArray[i][0], cr);
+    analogWrite(ledArray[i][1], cg);
+    analogWrite(ledArray[i][2], cb);
+  }
 }
 
 void recieveRGBValues()

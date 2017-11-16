@@ -19,7 +19,7 @@ void setup()
   colorRed = 255;
   colorGreen = 255;
   colorBlue = 255;
-  updateColors();
+  updateColors(colorRed, colorGreen, colorBlue);
   
   Serial.println("LED Controller Started.");
 }
@@ -39,7 +39,7 @@ void loop()
       
       if(value == "on")
       {
-        updateColors();
+        updateColors(colorRed, colorGreen, colorBlue);
       }
       else
       {
@@ -50,18 +50,8 @@ void loop()
     } 
     else if(message == "color") 
     {
-      waitForSerial();
-      String red = Serial.readString();
-      waitForSerial();
-      String green = Serial.readString();
-      waitForSerial();
-      String blue = Serial.readString();
-
-      colorRed = red.toInt();
-      colorGreen = green.toInt();
-      colorBlue = blue.toInt();
-
-      updateColors();
+      recieveRGBValues();
+      updateColors(colorRed, colorGreen, colorBlue);
     }
     else
     {
@@ -77,10 +67,24 @@ void waitForSerial()
   }
 }
 
-void updateColors()
+void updateColors(int cr, int cg, int cb)
 {   
-  analogWrite(ledRed, colorRed);
-  analogWrite(ledGreen, colorGreen);
-  analogWrite(ledBlue, colorBlue);
+  analogWrite(ledRed, cr);
+  analogWrite(ledGreen, cg);
+  analogWrite(ledBlue, cb);
+}
+
+void recieveRGBValues()
+{
+  waitForSerial();
+  String red = Serial.readString();
+  waitForSerial();
+  String green = Serial.readString();
+  waitForSerial();
+  String blue = Serial.readString();
+
+  colorRed = red.toInt();
+  colorGreen = green.toInt();
+  colorBlue = blue.toInt();
 }
 
